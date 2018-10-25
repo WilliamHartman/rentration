@@ -46,21 +46,24 @@ const strategy = new Auth0Strategy({
     const db = app.get("db");
     const userData = profile._json;
     
-    db.find_user([userData.identities[0].user_id]).then(user => {
+    db.find_user([userData.sub]).then(user => {
         if (user[0]) {
+            console.log(user[0].auth_id)
           return done(null, user[0].user_id);
         } else {
           db
             .create_user([
-              userData.name,
+              userData.given_name,
+              userData.family_name,
               userData.email,
               userData.picture,
-              userData.identities[0].user_id
+              userData.sub
             ])
             .then(user => {
               return done(null, user[0].user_id);
             });
         }
+        return done(null, user[0].user_id)
       });
     }
   )
@@ -70,33 +73,22 @@ passport.use(strategy)
 passport.serializeUser( (id, done) => {
     done(null, id);
 }) 
-
+ 
 passport.deserializeUser( (id, done) => {
     console.log('deserializeUser ', id)
-    app.get("db").find_session_user([id])
+    app.get("db").find_session_user(id)
         .then(user => {
-        console.log(user);
+        console.log(user.given_name, ' is deserialized.');
         done(null, user[0]);
         });
 })
 
-app.get('/auth/me', (req, res) => {
-    if(!req.user){
-        console.log('if(!req.user) === true')
-        return res.status(401).send('No user logged in.');
-    }
-    return res.status(200).send(req.user);
-})
-
-app.get('/auth', passport.authenticate('auth0'));
-app.get('/auth/callback', passport.authenticate('auth0', {
-    successRedirect: 'http://localhost:3000/'
-}))
-
 // Endpoints
 app.get("/auth", passport.authenticate("auth0"));
-app.get("/auth/callback", passport.authenticate("auth0", {successRedirect: process.env.SUCCESSREDIRECT}));
+app.get("/auth/callback", passport.authenticate("auth0", {successRedirect: process.env.SUCCESS_REDIRECT}));
+
 app.get("/auth/me", (req, res) => {
+    console.log('/auth/me hit. req: ', req.user)
     if (req.user) {
       return res.status(200).send(req.user);
     } else {
@@ -114,11 +106,6 @@ app.get("/logout", function(req, res) {
     req.session.access_token = null;
     req.session.save();
     res.redirect(process.env.FRONTEND_URL);  
-})
-
-
-app.get('*', (req, res)=>{
-  res.sendFile(path.join(__dirname, '../build/index.html'));
 })
 
 

@@ -5,7 +5,7 @@ import "./Navbar.css";
 import Drawer from "material-ui/Drawer";
 import MenuItem from "material-ui/MenuItem";
 import { withRouter } from "react-router";
-import MDMenu from 'react-icons/lib/md/menu.js';
+//import MDMenu from 'react-icons/lib/md/menu.js';
 //import logo from '../../assets/weightprojection.png';
 import { getUserData } from './../../redux/reducer';
 import Button from '@material-ui/core/Button';
