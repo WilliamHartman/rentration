@@ -72,7 +72,9 @@ class Navbar extends Component {
     // }
     render(){
         return(
-            <div>Navbar</div>
+            <div>
+                <Link to='/' className='link'>Home</Link>
+            </div>
         )
     }
 

@@ -48,11 +48,9 @@ const strategy = new Auth0Strategy({
     
     db.find_user([userData.sub]).then(user => {
         if (user[0]) {
-            console.log(user[0].auth_id)
           return done(null, user[0].user_id);
         } else {
-          db
-            .create_user([
+          db.create_user([
               userData.given_name,
               userData.family_name,
               userData.email,
@@ -75,10 +73,9 @@ passport.serializeUser( (id, done) => {
 }) 
  
 passport.deserializeUser( (id, done) => {
-    console.log('deserializeUser ', id)
     app.get("db").find_session_user(id)
         .then(user => {
-        console.log(user.given_name, ' is deserialized.');
+        console.log(user.auth_id, ` is deserialized.`);
         done(null, user[0]);
         });
 })
@@ -88,7 +85,6 @@ app.get("/auth", passport.authenticate("auth0"));
 app.get("/auth/callback", passport.authenticate("auth0", {successRedirect: process.env.SUCCESS_REDIRECT}));
 
 app.get("/auth/me", (req, res) => {
-    console.log('/auth/me hit. req: ', req.user)
     if (req.user) {
       return res.status(200).send(req.user);
     } else {
@@ -98,7 +94,7 @@ app.get("/auth/me", (req, res) => {
 
 app.get("/auth/logout", (req, res) => {
     req.logOut();
-    res.redirect(process.env.SUCCESSREDIRECT)
+    res.redirect(process.env.SUCCESS_REDIRECT)
 })
 
 app.get("/logout", function(req, res) {
@@ -109,6 +105,6 @@ app.get("/logout", function(req, res) {
 })
 
 
-// launch the server
+//launch the server
 const PORT = 8086;
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
