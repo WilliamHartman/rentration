@@ -14,8 +14,8 @@ class Login extends Component {
         }
     }
 
-    componentDidMount = () => {
-        if(this.props.user.user_id){
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.user.user_id){
             this.props.history.push('/');
         }
     }

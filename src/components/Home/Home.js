@@ -18,20 +18,17 @@ class Home extends Component {
         if(!this.props.user.user_id){
             console.log('Not authorized. Redirecting to Login page.')
             this.props.history.push('/login');
-        } else {
-            //this.props.history.push('/dashboard');
         }
     }
     
     
 
-    render (){
+    render(){
         console.log('Home for user: ', this.props.user)
         return (
             <div className="Home">
-                Home page
                 <div>
-                    {this.props.user.user_id}
+                    Welcome {this.props.user.given_name} {this.props.user.family_name}
                 </div>
             </div>
         )
