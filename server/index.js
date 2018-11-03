@@ -10,6 +10,7 @@ const process = require("process");
 const bodyParser = require('body-parser');
 const cors = require('cors')
 const moment = require('moment');
+const ctrl = require('./controllers/controller')
 require('dotenv').config();
 
 
@@ -97,13 +98,15 @@ app.get("/auth/logout", (req, res) => {
     res.redirect(process.env.SUCCESS_REDIRECT)
 })
 
-app.get("/logout", function(req, res) {
-    req.session.authorized = false;
-    req.session.access_token = null;
-    req.session.save();
-    res.redirect(process.env.FRONTEND_URL);  
-})
+// app.get("/logout", function(req, res) {
+//     req.session.authorized = false;
+//     req.session.access_token = null;
+//     req.session.save();
+//     res.redirect(process.env.FRONTEND_URL);  
+// })
 
+//Data Endpoints
+app.get('/getuserbills/:user', ctrl.getUserBills)
 
 //launch the server
 const PORT = 8086;

@@ -23,10 +23,7 @@ class Login extends Component {
     render (){
         return (
             <div className="Login">
-                Login
-                <a href={process.env.REACT_APP_LOGIN}>
-                    <div className="Button_Login" ><p>L0GIN</p></div>
-                </a>
+                Welcome to Rent Ration. Please login to continue
             </div>
         )
     }
